@@ -20,6 +20,27 @@ bool checkplot(int row, int col, char board[3][3]) {
     return true;
 }
 
+bool checkwin(char board[3][3], int player) {
+    // Checking rows and columns
+    for (int i = 0; i < 3; i++) {
+        if (board[i][0] == (char) player && board[i][1] == (char) player && board[i][2] == (char) player) {
+            return true;
+        } else if (board[0][i] == (char) player && board[1][i] == (char) player && board[2][i] == (char) player) {
+            return true;
+        }
+    }
+    // Checking diagonals
+    if (board[0][0] == (char) player && board[1][1] == (char) player && board[2][2] == (char) player) {
+        return true;
+    }
+    if (board[0][2] == (char) player && board[1][1] == (char) player && board[3][0] == (char) player) {
+        return true;
+    }
+    return false;
+}
+void playAgain();
+
+
 int main() {
     // Initialising the board for the game
     char board[3][3] = {{' ', ' ', ' '},
@@ -33,7 +54,7 @@ int main() {
         // Setting up input for each turn
         while (1) {
             // cout is the standard output function in c++
-            cout << "Player number" << player << ",choose your plot!\n";
+            cout << "Player number " << player << ", choose your plot!\n";
             cout << "Row (Enter from 1-3):";
             // cin is the standard input function in c++
             cin >> row;
@@ -45,7 +66,30 @@ int main() {
                 cout << "Invalid plot!\n";
             }
         }
-        
-
+        // Updating the board with the player's character
+        board[row - 1][col - 1] = (char) player;
+        // Checking if a player has won
+        if (checkwin(board, player)) {
+            cout << "Player " << player << " Wins this game!\n";
+            playAgain();
+            return 0;
+        }
+        // Statement to switch player to 2 if equal to 1, 1 if equal to 2
+        player = (player == 1) ? 2:1;
     }
+    cout << "Draw, no one wins!\n";
+    playAgain();
+    return 0;
+}
+
+void playAgain() {
+    char cont = 'M';
+    cout << "Play again? (Y/N)\n";
+    cin >> cont;
+    if (cont != 'Y' && cont != 'N') {
+        cout << "Invalid input, terminaing!\n";
+    } else if (cont == 'Y') {
+        main();
+    }
+    return;
 }
